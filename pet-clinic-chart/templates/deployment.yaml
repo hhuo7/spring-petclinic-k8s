@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pet-clinic.fullname" . }}
+  labels:
+    {{- include "pet-clinic.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "pet-clinic.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "pet-clinic.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.env.SERVER_PORT }}
+          protocol: TCP
+        # Environment variables from ConfigMap
+        envFrom:
+        - configMapRef:
+            name: {{ include "pet-clinic.fullname" . }}-config
+        # Liveness probe: restart container if unhealthy
+        livenessProbe:
+          {{- toYaml .Values.livenessProbe | nindent 12 }}
+        # Readiness probe: remove from service if not ready
+        readinessProbe:
+          {{- toYaml .Values.readinessProbe | nindent 12 }}
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}

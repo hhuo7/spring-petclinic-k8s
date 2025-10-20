@@ -1,0 +1,25 @@
+prometheus:
+  prometheusSpec:
+    # Retention period for metrics
+    retention: 15d
+
+    # Resource limits
+    resources:
+      requests:
+        cpu: 100m
+        memory: 500Mi
+      limits:
+        cpu: 500m
+        memory: 2Gi
+
+    # Service Monitor Selector - tells Prometheus which ServiceMonitors to scrape
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector: {}
+
+# Grafana is included in kube-prometheus-stack but disabled by default
+grafana:
+  enabled: true
+  adminPassword: admin
+  persistence:
+    enabled: true
+    size: 1Gi

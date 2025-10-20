@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "pet-clinic.fullname" . }}-config
+  labels:
+    {{- include "pet-clinic.labels" . | nindent 4 }}
+data:
+  SERVER_PORT: "{{ .Values.env.SERVER_PORT }}"
+  CONTEXT_PATH: "{{ .Values.env.CONTEXT_PATH }}"
+  MANAGEMENT_ENDPOINTS: "{{ .Values.env.MANAGEMENT_ENDPOINTS }}"
+  SPRING_JPA_HIBERNATE_DDL_AUTO: "{{ .Values.env.SPRING_JPA_HIBERNATE_DDL_AUTO }}"

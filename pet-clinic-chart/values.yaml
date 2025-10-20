@@ -1,0 +1,67 @@
+# Default values for pet-clinic chart
+replicaCount: 2
+
+image:
+  repository: pet-clinic
+  tag: 1.0.0
+  pullPolicy: Never
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+# Environment variables passed to container
+env:
+  SERVER_PORT: 8080
+  CONTEXT_PATH: "/"
+  MANAGEMENT_ENDPOINTS: "health,metrics,prometheus"
+  SPRING_JPA_HIBERNATE_DDL_AUTO: "validate"
+
+# Resource requests/limits prevent pod eviction and ensure fair resource allocation
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
+
+# Autoscaling: scale pods based on CPU usage
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+# Health checks for Kubernetes
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: 8080
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health/readiness
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 5
+
+# Service monitoring
+serviceMonitor:
+  enabled: true
+  interval: 30s
+  path: /actuator/prometheus

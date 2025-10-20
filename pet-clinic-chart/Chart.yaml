@@ -1,0 +1,13 @@
+apiVersion: v2
+name: pet-clinic
+description: Spring Boot Pet Clinic application with monitoring
+type: application
+version: 1.0.0
+appVersion: "1.0"
+keywords:
+  - spring-boot
+  - petclinic
+  - monitoring
+home: https://github.com/spring-projects/spring-petclinic
+maintainers:
+  - name: Hilda

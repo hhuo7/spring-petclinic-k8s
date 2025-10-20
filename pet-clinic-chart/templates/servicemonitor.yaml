@@ -1,0 +1,25 @@
+{{- if .Values.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "pet-clinic.fullname" . }}
+  labels:
+    # Ensure these labels are picked up by Prometheus's ServiceMonitorSelector
+    release: prometheus # <--- Crucial label for discovery, usually "prometheus"
+    {{- include "pet-clinic.labels" . | nindent 4 }}
+spec:
+  # 1. ADD NAMESPACE SELECTOR
+  namespaceSelector:
+    matchNames:
+    - default # Assuming pet-clinic is deployed in the 'default' namespace
+  
+  # 2. MATCH SERVICE LABELS
+  selector:
+    matchLabels:
+      {{- include "pet-clinic.selectorLabels" . | nindent 6 }}
+  
+  endpoints:
+  - port: http
+    path: {{ .Values.serviceMonitor.path }}
+    interval: {{ .Values.serviceMonitor.interval }}
+{{- end }}
