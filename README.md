@@ -113,8 +113,6 @@ docker run -p 8080:8080 pet-clinic:1.0.0
 # Open http://localhost:8080 in browser
 ```
 
-**Build time**: ~3-5 minutes (depending on internet speed for dependencies)
-
 #### Environment Variables Explained
 
 | Variable               | Default                   | Purpose                            |
@@ -560,8 +558,6 @@ Create the following panels (each demonstrates different aspects of monitoring):
 
 ## Troubleshooting
 
-### Common Issues and Solutions
-
 #### Issue 1: Pods Keep Restarting
 
 **Symptoms**:
@@ -735,23 +731,17 @@ Environment Setup 30 min
 
 **Learning**: Health checks are essential but need proper timing. Too aggressive = restart loops.
 
-
 **Problem**: Init:CrashLoopBackOff status on the Grafana pod
 
 **Solution**:
 Stop the Failing Pod/Deployment:
 
-Bash
-
 `kubectl delete deployment prometheus-grafana -n monitoring`
-
-Bash
 
 `kubectl delete pvc prometheus-grafana -n monitoring`
 
-Bash
-
 `helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace --values prometheus-values.yaml --replace`
+
 Wait 2-3 minutes and check the status.
 
 #### 3. Prometheus Not Scraping Metrics
